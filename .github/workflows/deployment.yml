@@ -36,7 +36,7 @@ jobs:
       - run: npm run build --if-present
 
       - name: Synth stack
-        run: cdk synth
+        run: npx cdk synth
 
       - name: Deploy stack
-        run: cdk deploy --require-approval never
+        run: npx cdk deploy --require-approval never
