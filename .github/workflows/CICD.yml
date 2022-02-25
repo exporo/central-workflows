@@ -3,6 +3,10 @@ name: CI + CD
 on:
   workflow_call:
     inputs:
+      NODE_VERSION:
+        type: string
+        required: false
+        default: 14
       MAIN_BRANCH:
         type: string
         required: false
@@ -19,6 +23,7 @@ on:
 
 jobs:
   Build:
+    name: Deploy and Test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -26,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ inputs.NODE_VERSION }}
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v2
@@ -58,7 +63,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ inputs.NODE_VERSION }}
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
@@ -86,7 +91,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ inputs.NODE_VERSION }}
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
@@ -113,7 +118,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ inputs.NODE_VERSION }}
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
