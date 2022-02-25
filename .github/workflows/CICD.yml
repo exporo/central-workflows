@@ -23,7 +23,7 @@ on:
 
 jobs:
   Build:
-    name: Deploy and Test
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: checkout
