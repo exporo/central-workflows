@@ -55,6 +55,8 @@ jobs:
     environment:
       name: Development
     steps:
+      - name: checkout
+        uses: actions/checkout@v2
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -75,7 +77,7 @@ jobs:
 
   DeployStage:
     name: Deploy to Stage
-    if: github.event.ref == 'refs/heads/${{ inputs.MAIN_BRANCH }}'
+    if: ${{ contains(github.event.ref, inputs.MAIN_BRANCH) }}
     needs: [Build]
     runs-on: ubuntu-latest
     environment:
