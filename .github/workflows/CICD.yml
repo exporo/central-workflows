@@ -15,6 +15,10 @@ on:
         type: string
         required: false
         default: eu-central-1
+      DEFAULT_FRAMEWORK:
+        type: string
+        required: false
+        default: cdk
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -69,8 +73,12 @@ jobs:
       - run: npm run build --if-present
       - name: Synth stack
         run: npx cdk synth
-      - name: Deploy stack
+      - name: Deploy CDK stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: npx cdk deploy --require-approval never
+      - name: Deploy Serverless stack
+        if: inputs.DEFAULT_FRAMEWORK == 'serverless'
+        run: npx serverless deploy
 
   DeployStage:
     name: Deploy to Stage
@@ -97,8 +105,12 @@ jobs:
       - run: npm run build --if-present
       - name: Synth stack
         run: npx cdk synth
-      - name: Deploy stack
+      - name: Deploy CDK stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: npx cdk deploy --require-approval never
+      - name: Deploy Serverless stack
+        if: inputs.DEFAULT_FRAMEWORK == 'serverless'
+        run: npx serverless deploy
 
   DeployProd:
     name: Deploy to Production
@@ -124,5 +136,9 @@ jobs:
       - run: npm run build --if-present
       - name: Synth stack
         run: npx cdk synth
-      - name: Deploy stack
+      - name: Deploy CDK stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: npx cdk deploy --require-approval never
+      - name: Deploy Serverless stack
+        if: inputs.DEFAULT_FRAMEWORK == 'serverless'
+        run: npx serverless deploy
