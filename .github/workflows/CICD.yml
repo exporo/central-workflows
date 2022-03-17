@@ -135,6 +135,7 @@ jobs:
         run: npm ci
       - run: npm run build --if-present
       - name: Synth stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: npx cdk synth
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
