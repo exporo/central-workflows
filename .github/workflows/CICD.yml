@@ -3,9 +3,6 @@ name: CI + CD
 on:
   workflow_call:
     inputs:
-      ACCOUNT_ID:
-        type: string
-        required: true
       NODE_VERSION:
         type: string
         required: false
@@ -26,6 +23,8 @@ on:
       AWS_ACCESS_KEY_ID:
         required: true
       AWS_SECRET_ACCESS_KEY:
+        required: true
+      ACCOUNT_ID:
         required: true
 
 jobs:
@@ -76,7 +75,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
+        run: cdk bootstrap aws://${{secrets.ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=dev npx cdk deploy --require-approval never --all
@@ -109,7 +108,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
+        run: cdk bootstrap aws://${{secrets.ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=stage npx cdk deploy --require-approval never --all
@@ -141,7 +140,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
+        run: cdk bootstrap aws://${{secrets.ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=prod npx cdk deploy --require-approval never --all
