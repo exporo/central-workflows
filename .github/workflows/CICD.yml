@@ -75,10 +75,10 @@ jobs:
         run: npx cdk synth
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk deploy --require-approval never --all
+        run: STAGE=dev npx cdk deploy --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: npx serverless deploy
+        run: STAGE=dev npx serverless deploy
 
   DeployStage:
     name: Deploy to Stage
@@ -107,10 +107,10 @@ jobs:
         run: npx cdk synth
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk deploy --require-approval never --all
+        run: STAGE=stage npx cdk deploy --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: npx serverless deploy
+        run: STAGE=stage npx serverless deploy
 
   DeployProd:
     name: Deploy to Production
@@ -139,7 +139,7 @@ jobs:
         run: npx cdk synth
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk deploy --require-approval never --all
+        run: STAGE=prod npx cdk deploy --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: npx serverless deploy
+        run: STAGE=prod npx serverless deploy
