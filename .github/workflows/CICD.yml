@@ -3,6 +3,9 @@ name: CI + CD
 on:
   workflow_call:
     inputs:
+      ACCOUNT_ID:
+        type: string
+        required: true
       NODE_VERSION:
         type: string
         required: false
@@ -71,8 +74,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
-      - name: Synth stack
-        run: npx cdk synth
+      - name: Bootstrap stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
+        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=dev npx cdk deploy --require-approval never --all
@@ -103,8 +107,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
-      - name: Synth stack
-        run: npx cdk synth
+      - name: Bootstrap stack
+        if: inputs.DEFAULT_FRAMEWORK == 'cdk'
+        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=stage npx cdk deploy --require-approval never --all
@@ -134,9 +139,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
-      - name: Synth stack
+      - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk synth
+        run: cdk bootstrap aws://${{ACCOUNT_ID}}/${{AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=prod npx cdk deploy --require-approval never --all
