@@ -78,7 +78,7 @@ jobs:
         run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=dev npx cdk deploy --require-approval never --all
+        run: STAGE=dev npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
         run: STAGE=dev npx serverless deploy
@@ -111,7 +111,7 @@ jobs:
         run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=stage npx cdk deploy --require-approval never --all
+        run: STAGE=stage npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
         run: STAGE=stage npx serverless deploy
@@ -143,7 +143,7 @@ jobs:
         run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=prod npx cdk deploy --require-approval never --all
+        run: STAGE=prod npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
         run: STAGE=prod npx serverless deploy
