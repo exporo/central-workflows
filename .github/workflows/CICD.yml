@@ -81,7 +81,7 @@ jobs:
         run: STAGE=dev npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=dev npx serverless deploy
+        run: STAGE=dev AWS_REGION=${{ inputs.AWS_DEFAULT_REGION }} npx serverless deploy
 
   DeployStage:
     name: Deploy to Stage
@@ -114,7 +114,7 @@ jobs:
         run: STAGE=stage npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=stage npx serverless deploy
+        run: STAGE=stage AWS_REGION=${{ inputs.AWS_DEFAULT_REGION }} npx serverless deploy
 
   DeployProd:
     name: Deploy to Production
@@ -146,4 +146,4 @@ jobs:
         run: STAGE=prod npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=prod npx serverless deploy
+        run: STAGE=prod AWS_REGION=${{ inputs.AWS_DEFAULT_REGION }} npx serverless deploy
