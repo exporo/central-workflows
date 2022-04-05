@@ -33,7 +33,7 @@ on:
       GITHUB_TOKEN:
         required: false
       SONAR_TOKEN:
-        required: true
+        required: false
 
 jobs:
   Build:
