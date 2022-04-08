@@ -30,7 +30,7 @@ on:
         required: true
       AWS_ACCOUNT_ID:
         required: true
-      GITHUB_TOKEN:
+      GITHUB_TOKEN_VALUE:
         required: false
       SONAR_TOKEN:
         required: false
@@ -85,7 +85,7 @@ jobs:
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VALUE }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   DeployDev:
