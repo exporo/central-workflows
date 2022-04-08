@@ -19,6 +19,10 @@ on:
         type: string
         required: false
         default: cdk
+      USE_SONARCLOUD:
+        type: boolean
+        required: false
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -26,6 +30,10 @@ on:
         required: true
       AWS_ACCOUNT_ID:
         required: true
+      GITHUB_TOKEN:
+        required: false
+      SONAR_TOKEN:
+        required: false
 
 jobs:
   Build:
@@ -49,6 +57,36 @@ jobs:
         run: npm ci --ignore-scripts
       - run: npm run build --if-present
       - run: npm test
+
+  Sonarcloud:
+    name: Run Sonarcloud
+    if: inputs.USE_SONARCLOUD
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ inputs.NODE_VERSION }}
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
+
+      - name: Scan Test Coverage
+        run: npm run test-coverage --no-warnings
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   DeployDev:
     name: Deploy to Dev
