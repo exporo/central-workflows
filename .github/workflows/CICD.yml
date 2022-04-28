@@ -134,7 +134,7 @@ jobs:
       name: Stage
     steps:
       - name: Check if Deploy stage is needed
-        if:  ${{ !inputs.DISABLE_STAGE }}
+        if:  ${{ inputs.DISABLE_STAGE }}
         run: exit 0
       - name: checkout
         uses: actions/checkout@v2
