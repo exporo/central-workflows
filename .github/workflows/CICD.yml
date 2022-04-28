@@ -127,7 +127,7 @@ jobs:
 
   DeployStage:
     name: Deploy to Stage
-    if: ${{ contains(github.event.ref, inputs.MAIN_BRANCH) && !inputs.DISABLE_STAGE }}
+    if: ${{ contains(github.event.ref, inputs.MAIN_BRANCH) }}
     needs: [Build]
     runs-on: ubuntu-latest
     environment:
