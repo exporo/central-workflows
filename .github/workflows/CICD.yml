@@ -117,7 +117,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=dev npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=dev npx cdk deploy -vv --require-approval never --all
@@ -153,7 +153,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=stage npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=stage npx cdk deploy -vv --require-approval never --all
@@ -185,7 +185,7 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=prod npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
         run: STAGE=prod npx cdk deploy -vv --require-approval never --all
