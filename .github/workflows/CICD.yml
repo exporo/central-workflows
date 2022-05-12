@@ -128,13 +128,13 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=dev npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=dev npx cdk deploy -vv --require-approval never --all
+        run: npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=dev npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
 
   DeployStage:
     name: Deploy to Stage
@@ -144,6 +144,15 @@ jobs:
     environment:
       name: Stage
     steps:
+      - name: aws-ssm-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        env:
+          AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          ssm_parameter_list: 'infrastructure_environment'
+          simple_json: true
       - name: checkout
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: actions/checkout@v2
@@ -167,13 +176,13 @@ jobs:
         run: npm run build --if-present
       - name: Bootstrap stack
         if: ${{ inputs.DEFAULT_FRAMEWORK == 'cdk' && !inputs.DISABLE_STAGE }}
-        run: STAGE=stage npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: ${{ inputs.DEFAULT_FRAMEWORK == 'cdk' && !inputs.DISABLE_STAGE }}
-        run: STAGE=stage npx cdk deploy -vv --require-approval never --all
+        run: npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: ${{inputs.DEFAULT_FRAMEWORK == 'serverless' && !inputs.DISABLE_STAGE }}
-        run: STAGE=stage npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
       - name: Check if Deploy stage is needed
         if: ${{ inputs.DISABLE_STAGE }}
         run: exit 0
@@ -185,6 +194,15 @@ jobs:
     environment:
       name: Production
     steps:
+      - name: aws-ssm-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        env:
+          AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          ssm_parameter_list: 'infrastructure_environment'
+          simple_json: true
       - name: checkout
         uses: actions/checkout@v2
       - name: Configure AWS Credentials
@@ -202,10 +220,10 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=prod npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: STAGE=prod npx cdk deploy -vv --require-approval never --all
+        run: npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
