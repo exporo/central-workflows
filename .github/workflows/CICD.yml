@@ -91,12 +91,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VALUE }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  DeployDev:
-    name: Deploy to Dev
-    if: github.event_name == 'pull_request'
-    needs: [Build]
-    runs-on: ubuntu-latest
+  SetEnv:
+    name: Set env from SSM
     environment:
       name: Development
     steps:
@@ -108,6 +104,17 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           ssm_parameter_list: '/env/STAGE'
+      - name: echo env
+        run: echo $AWS_SSM_STAGE
+
+  DeployDev:
+    name: Deploy to Dev
+    if: github.event_name == 'pull_request'
+    needs: [Build, SetEnv]
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+    steps:
       - name: echo env
         run: echo $AWS_SSM_STAGE
       - name: checkout
