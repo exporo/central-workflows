@@ -109,8 +109,7 @@ jobs:
         with:
           ssm_parameter_list: '/env/STAGE'
       - name: echo env
-        run: echo $AWS_SSM/ENV/STAGE
-      - run: echo $AWS_SSM_ENV_STAGE
+        run: echo $AWS_SSM_STAGE
       - name: checkout
         uses: actions/checkout@v2
       - name: Configure AWS Credentials
