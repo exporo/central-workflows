@@ -109,8 +109,6 @@ jobs:
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
-      - name: echo env
-        run: echo $AWS_SSM_INFRASTRUCTURE_ENVIRONMENT
       - name: checkout
         uses: actions/checkout@v2
       - name: Configure AWS Credentials
@@ -128,13 +126,13 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=dev npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk deploy -vv --require-approval never --all
+        run: STAGE=dev npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: STAGE=dev npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
 
   DeployStage:
     name: Deploy to Stage
@@ -176,13 +174,13 @@ jobs:
         run: npm run build --if-present
       - name: Bootstrap stack
         if: ${{ inputs.DEFAULT_FRAMEWORK == 'cdk' && !inputs.DISABLE_STAGE }}
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=stage npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: ${{ inputs.DEFAULT_FRAMEWORK == 'cdk' && !inputs.DISABLE_STAGE }}
-        run: npx cdk deploy -vv --require-approval never --all
+        run: STAGE=stage npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: ${{inputs.DEFAULT_FRAMEWORK == 'serverless' && !inputs.DISABLE_STAGE }}
-        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: STAGE=stage npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
       - name: Check if Deploy stage is needed
         if: ${{ inputs.DISABLE_STAGE }}
         run: exit 0
@@ -220,10 +218,10 @@ jobs:
       - run: npm run build --if-present
       - name: Bootstrap stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
+        run: STAGE=prod npx cdk bootstrap aws://${{secrets.AWS_ACCOUNT_ID}}/${{inputs.AWS_DEFAULT_REGION}}
       - name: Deploy CDK stack
         if: inputs.DEFAULT_FRAMEWORK == 'cdk'
-        run: npx cdk deploy -vv --require-approval never --all
+        run: STAGE=prod npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
