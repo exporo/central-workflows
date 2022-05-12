@@ -201,6 +201,7 @@ jobs:
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
+        continue-on-error: true
       - name: checkout
         uses: actions/checkout@v2
       - name: Configure AWS Credentials
