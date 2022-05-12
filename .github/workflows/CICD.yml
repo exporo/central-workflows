@@ -93,6 +93,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SetEnv:
     name: Set env from SSM
+    runs-on: ubuntu-latest
     environment:
       name: Development
     steps:
