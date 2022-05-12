@@ -101,6 +101,7 @@ jobs:
       name: Development
     steps:
       - name: aws-ssm-to-env
+        continue-on-error: true
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
@@ -193,7 +194,6 @@ jobs:
       name: Production
     steps:
       - name: aws-ssm-to-env
-        continue-on-error: true
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
