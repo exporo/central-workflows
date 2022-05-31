@@ -143,6 +143,7 @@ jobs:
       name: Stage
     steps:
       - name: aws-ssm-to-env
+        if: ${{ !inputs.DISABLE_STAGE }}
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
