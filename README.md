@@ -15,7 +15,7 @@ Reusable workflows for Exporo organization github actions
 
 - create file - ./.github/worflows/CICD.yml
 
-
+```
     name: CI + CD
     on:
       push:
@@ -39,3 +39,4 @@ Reusable workflows for Exporo organization github actions
         secrets:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+ ```
