@@ -60,6 +60,9 @@ jobs:
         with:
           path: ./node_modules
           key: modules-${{ hashFiles('package-lock.json') }}
+      - name: Switch Folder if required
+        if: inputs.SLS_SUBFOLDER != './'
+        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
@@ -78,7 +81,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
-        
+
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v2
@@ -88,7 +91,7 @@ jobs:
 
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
-        run: cd inputs.SLS_SUBFOLDER
+        run: cd ${{ inputs.SLS_SUBFOLDER }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -130,7 +133,7 @@ jobs:
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
-        run: cd inputs.SLS_SUBFOLDER
+        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -178,7 +181,7 @@ jobs:
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
-        run: cd inputs.SLS_SUBFOLDER
+        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: actions/setup-node@v2
@@ -229,7 +232,7 @@ jobs:
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
-        run: cd inputs.SLS_SUBFOLDER
+        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
