@@ -60,11 +60,9 @@ jobs:
         with:
           path: ./node_modules
           key: modules-${{ hashFiles('package-lock.json') }}
-
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
-
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
