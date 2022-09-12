@@ -60,9 +60,6 @@ jobs:
         with:
           path: ./node_modules
           key: modules-${{ hashFiles('package-lock.json') }}
-      - name: Switch Folder if required
-        if: inputs.SLS_SUBFOLDER != './'
-        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
@@ -88,10 +85,6 @@ jobs:
         with:
           path: ./node_modules
           key: modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Switch Folder if required
-        if: inputs.SLS_SUBFOLDER != './'
-        run: cd ${{ inputs.SLS_SUBFOLDER }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -131,9 +124,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
-      - name: Switch Folder if required
-        if: inputs.SLS_SUBFOLDER != './'
-        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -149,7 +139,7 @@ jobs:
         run: STAGE=dev npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=dev npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: cd ${{ inputs.SLS_SUBFOLDER }} && STAGE=dev npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
 
   DeployStage:
     name: Deploy to Stage
@@ -179,9 +169,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
-      - name: Switch Folder if required
-        if: inputs.SLS_SUBFOLDER != './'
-        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: actions/setup-node@v2
@@ -201,7 +188,7 @@ jobs:
         run: STAGE=stage npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: ${{inputs.DEFAULT_FRAMEWORK == 'serverless' && !inputs.DISABLE_STAGE }}
-        run: STAGE=stage npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: cd ${{ inputs.SLS_SUBFOLDER }} && STAGE=stage npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
       - name: Check if Deploy stage is needed
         if: ${{ inputs.DISABLE_STAGE }}
         run: exit 0
@@ -230,9 +217,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
-      - name: Switch Folder if required
-        if: inputs.SLS_SUBFOLDER != './'
-        run: cd ${{ inputs.SLS_SUBFOLDER }}
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -248,4 +232,4 @@ jobs:
         run: STAGE=prod npx cdk deploy -vv --require-approval never --all
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
-        run: STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        run: cd ${{ inputs.SLS_SUBFOLDER }} && STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
