@@ -7,8 +7,9 @@ Reusable workflows for Exporo organization github actions
 **Configure Environment**
 
 - Create **Development**, **Stage** and **Production** environment.
-- Create **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** secrects keys in each environment.
+- Create **AWS_ACCESS_KEY_ID**, **AWS_SECRET_ACCESS_KEY** and **AWS_ACCOUNT_ID** secrects keys in each environment.
 - On **Production** add **Required reviewers** to hold production deploys without approval
+- Create **Parameter Store** as **infrastructure_environment** in JSON (empty {} if none)format for environments variables.
 
 **Configure Repository**
 
