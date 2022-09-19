@@ -42,6 +42,8 @@ on:
         required: false
       SONAR_TOKEN:
         required: false
+      NPM_AUTH_TOKEN:
+        required: false
 
 jobs:
   Build:
@@ -54,6 +56,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v2
@@ -81,7 +87,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
-
+          
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
+          
       - name: Cache dependencies
         id: cache
         uses: actions/cache@v2
@@ -138,6 +149,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
@@ -187,6 +202,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         if: ${{ !inputs.DISABLE_STAGE }}
         run: npm ci
@@ -237,6 +256,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ inputs.NODE_VERSION }}
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
       - name: Install dependencies
         run: npm ci
       - run: npm run build --if-present
