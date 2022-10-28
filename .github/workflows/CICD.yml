@@ -127,6 +127,12 @@ jobs:
     environment:
       name: Development
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         uses: bomb-on/aws-ssm-to-env@master
         env:
@@ -174,6 +180,12 @@ jobs:
     environment:
       name: Stage
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: bomb-on/aws-ssm-to-env@master
@@ -230,6 +242,12 @@ jobs:
     environment:
       name: Production
     steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         uses: bomb-on/aws-ssm-to-env@master
         env:
