@@ -32,9 +32,7 @@ on:
         required: false
         default: './'
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
+      AWS_OIDC_ROLE_ARN:
         required: true
       AWS_ACCOUNT_ID:
         required: true
@@ -44,6 +42,10 @@ on:
         required: false
       NPM_AUTH_TOKEN:
         required: false
+permissions:
+  id-token: write
+  contents: read
+
 
 jobs:
   Build:
@@ -129,8 +131,8 @@ jobs:
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
@@ -139,8 +141,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
@@ -179,8 +181,8 @@ jobs:
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
@@ -191,8 +193,8 @@ jobs:
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
@@ -236,8 +238,8 @@ jobs:
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
@@ -246,8 +248,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
           aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
