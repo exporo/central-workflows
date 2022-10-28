@@ -142,12 +142,12 @@ jobs:
           simple_json: true
       - name: checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
-          role-session-name: githuboidc
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+      #     role-session-name: githuboidc
+      #     aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
@@ -197,13 +197,13 @@ jobs:
       - name: checkout
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        if: ${{ !inputs.DISABLE_STAGE }}
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
-          role-session-name: githuboidc
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
+      # - name: Configure AWS Credentials
+      #   if: ${{ !inputs.DISABLE_STAGE }}
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+      #     role-session-name: githuboidc
+      #     aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
@@ -257,12 +257,12 @@ jobs:
           simple_json: true
       - name: checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
-          role-session-name: githuboidc
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+      #     role-session-name: githuboidc
+      #     aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
