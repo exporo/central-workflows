@@ -4,6 +4,7 @@ on:
   workflow_call:
   inputs:
     STAGE:
+      description: 'Allowed values are: dev, stage, prod'
       type: string
       required: true
       default: 'dev'
