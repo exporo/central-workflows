@@ -1,8 +1,12 @@
-name: Deploy to DEV
+name: Deploy CDK Application
 
 on:
   workflow_call:
   inputs:
+    STAGE:
+      type: string
+      required: true
+      default: 'dev'
     AWS_ACCOUNT:
       type: string
       required: true
@@ -22,13 +26,13 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy [dev]
+    name: Deploy [${{ inputs.STAGE }}]
     runs-on: ubuntu-latest
-    environment: dev
+    environment: ${{ inputs.STAGE }}
     env:
       AWS_REGION: ${{ inputs.AWS_REGION }}
       AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}
-      AWS_SSM_STAGE: dev
+      AWS_SSM_STAGE: ${{ inputs.STAGE }}
       CDK_DEBUG: true
       DYNAMO_REMOVAL_POLICY: destroy
     steps:
