@@ -2,19 +2,23 @@ name: Deploy CDK Application
 
 on:
   workflow_call:
-  inputs:
-    STAGE:
-      description: 'Allowed values are: dev, stage, prod'
-      type: string
-      required: true
-      default: 'dev'
-    AWS_ACCOUNT:
-      type: string
-      required: true
-    AWS_REGION:
-      type: string
-      required: false
-      default: 'eu-central-1'
+    inputs:
+      STAGE:
+        description: 'Allowed values are: dev, stage, prod'
+        type: string
+        required: true
+        default: 'dev'
+      AWS_ACCOUNT:
+        type: string
+        required: true
+      AWS_REGION:
+        type: string
+        required: false
+        default: 'eu-central-1'
+      DYNAMO_REMOVAL_POLICY:
+        type: string
+        required: false
+        default: 'retain'
     secrets:
       AWS_OIDC_ROLE_ARN:
         required: true
@@ -35,7 +39,7 @@ jobs:
       AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}
       AWS_SSM_STAGE: ${{ inputs.STAGE }}
       CDK_DEBUG: true
-      DYNAMO_REMOVAL_POLICY: destroy
+      DYNAMO_REMOVAL_POLICY: ${{ inputs.DYNAMO_REMOVAL_POLICY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
