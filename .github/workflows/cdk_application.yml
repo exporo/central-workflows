@@ -58,6 +58,14 @@ jobs:
           node-version: ${{ env.NODE_VERSION_INFRASTRUCTURE }}
           registry-url: 'https://npm.pkg.github.com'
 
+      - name: 'Backend: Install NPM Dependencies'
+        run: npm install --prefix backend
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
+
+      - name: 'Backend: Run Test'
+        run: npm run test-coverage --no-warnings --prefix backend
+
       - name: 'Infrastructure: Install NPM Dependencies'
         run: npm install --prefix infrastructure
         env:
