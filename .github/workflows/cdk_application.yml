@@ -48,7 +48,7 @@ jobs:
       CDK_DEBUG: true
       DYNAMO_REMOVAL_POLICY: ${{ inputs.DYNAMO_REMOVAL_POLICY }}
       MAIL_SERVICE_USER: ${{ inputs.MAIL_SERVICE_USER }}
-      MAIL_SERVICE_PASSWORD: ${{ inputs.MAIL_SERVICE_PASSWORD }}
+      MAIL_SERVICE_PASSWORD: ${{ secrets.MAIL_SERVICE_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
