@@ -19,6 +19,13 @@ on:
         type: string
         required: false
         default: 'retain'
+      MAIL_SERVICE_USER:
+        type: string
+        required: false
+        default: 'svc_pat'
+      MAIL_SERVICE_PASSWORD:
+        type: string
+        required: false
     secrets:
       AWS_OIDC_ROLE_ARN:
         required: true
@@ -40,6 +47,8 @@ jobs:
       AWS_SSM_STAGE: ${{ inputs.STAGE }}
       CDK_DEBUG: true
       DYNAMO_REMOVAL_POLICY: ${{ inputs.DYNAMO_REMOVAL_POLICY }}
+      MAIL_SERVICE_USER: ${{ inputs.MAIL_SERVICE_USER }}
+      MAIL_SERVICE_PASSWORD: ${{ inputs.MAIL_SERVICE_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
