@@ -23,12 +23,18 @@ on:
         type: string
         required: false
         default: 'svc_pat'
+      EXPORO_AUTH_SERVICE_USERNAME:
+        type: string
+        required: false
+        default: 'tech+cognito-tsu-backend-whateveryouwant@exporo.com'
     secrets:
       AWS_OIDC_ROLE_ARN:
         required: true
       NPM_READ_TOKEN:
         required: true
       MAIL_SERVICE_PASSWORD:
+        required: false
+      EXPORO_AUTH_SERVICE_PASSWORD:
         required: false
 
 permissions:
