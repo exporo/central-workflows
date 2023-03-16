@@ -23,14 +23,13 @@ on:
         type: string
         required: false
         default: 'svc_pat'
-      MAIL_SERVICE_PASSWORD:
-        type: string
-        required: false
     secrets:
       AWS_OIDC_ROLE_ARN:
         required: true
       NPM_READ_TOKEN:
         required: true
+      MAIL_SERVICE_PASSWORD:
+        required: false
 
 permissions:
   id-token: write
