@@ -33,7 +33,7 @@ jobs:
         run: npm install
 
       - name: Scan Test Coverage
-        run: npm run test-coverage --no-warnings
+        run: npm run test-coverage --no-warnings --prefix backend
 
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
