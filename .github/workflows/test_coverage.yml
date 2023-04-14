@@ -30,7 +30,7 @@ jobs:
           echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
       - name: Install Dependencies
-        run: npm install
+        run: npm install --prefix backend
 
       - name: Scan Test Coverage
         run: npm run test-coverage --no-warnings --prefix backend
