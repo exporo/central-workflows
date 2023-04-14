@@ -28,11 +28,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.NODE_VERSION_INFRASTRUCTURE }}
+          node-version: ${{ env.NODE_VERSION_BACKEND }}
           registry-url: 'https://npm.pkg.github.com'
 
       - name: Install Dependencies
         run: npm install --prefix backend
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
       - name: Scan Test Coverage
         run: npm run test-coverage --no-warnings --prefix backend
