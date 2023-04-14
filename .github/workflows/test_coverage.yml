@@ -1,0 +1,40 @@
+name: Test Coverage
+
+on:
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN_VALUE:
+        required: true
+      SONAR_TOKEN:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  sonarcloud:
+    name: Run Sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+
+      - name: Setup access to Exporo NPM
+        run: |
+          echo "@exporo:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" >> ~/.npmrc
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Scan Test Coverage
+        run: npm run test-coverage --no-warnings
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VALUE }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
