@@ -2,11 +2,13 @@ name: Test Coverage
 
 on:
   workflow_call:
-    secrets:
-      GITHUB_TOKEN_VALUE:
-        required: true
-      SONAR_TOKEN:
-        required: true
+    #secrets:
+    #  NPM_AUTH_TOKEN:
+    #    required: true
+    #  GITHUB_TOKEN_VALUE:
+    #    required: true
+    #  SONAR_TOKEN:
+    #    required: true
 
 permissions:
   id-token: write
