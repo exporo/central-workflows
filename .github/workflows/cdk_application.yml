@@ -1,0 +1,98 @@
+name: Deploy CDK Application
+
+on:
+  workflow_call:
+    inputs:
+      STAGE:
+        description: 'Allowed values are: dev, stage, prod'
+        type: string
+        required: true
+        default: 'dev'
+      AWS_ACCOUNT:
+        type: string
+        required: true
+      AWS_REGION:
+        type: string
+        required: false
+        default: 'eu-central-1'
+      DYNAMO_REMOVAL_POLICY:
+        type: string
+        required: false
+        default: 'retain'
+      MAIL_SERVICE_USER:
+        type: string
+        required: false
+        default: 'svc_pat'
+      EXPORO_AUTH_SERVICE_USERNAME:
+        type: string
+        required: false
+        default: 'tech+cognito-tsu-backend-whateveryouwant@exporo.com'
+    secrets:
+      AWS_OIDC_ROLE_ARN:
+        required: true
+      NPM_READ_TOKEN:
+        required: true
+      MAIL_SERVICE_PASSWORD:
+        required: false
+      EXPORO_AUTH_SERVICE_PASSWORD:
+        required: false
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy [${{ inputs.STAGE }}]
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.STAGE }}
+    env:
+      AWS_REGION: ${{ inputs.AWS_REGION }}
+      AWS_ACCOUNT: ${{ inputs.AWS_ACCOUNT }}
+      AWS_SSM_STAGE: ${{ inputs.STAGE }}
+      CDK_DEBUG: true
+      DYNAMO_REMOVAL_POLICY: ${{ inputs.DYNAMO_REMOVAL_POLICY }}
+      EXPORO_AUTH_SERVICE_USERNAME: ${{ inputs.EXPORO_AUTH_SERVICE_USERNAME }}
+      EXPORO_AUTH_SERVICE_PASSWORD: ${{ secrets.EXPORO_AUTH_SERVICE_PASSWORD }}
+      MAIL_SERVICE_USER: ${{ inputs.MAIL_SERVICE_USER }}
+      MAIL_SERVICE_PASSWORD: ${{ secrets.MAIL_SERVICE_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: 'Backend: Read .nvmrc'
+        run: echo NODE_VERSION_BACKEND=`cat backend/.nvmrc` >> $GITHUB_ENV
+
+      - name: 'Infrastructure: Read .nvmrc'
+        run: echo NODE_VERSION_INFRASTRUCTURE=`cat infrastructure/.nvmrc` >> $GITHUB_ENV
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          aws-region: ${{ inputs.AWS_REGION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION_INFRASTRUCTURE }}
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: 'Backend: Install NPM Dependencies'
+        run: npm install --prefix backend
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
+
+      - name: 'Backend: Run Test'
+        run: npm run test-coverage --no-warnings --prefix backend
+
+      - name: 'Infrastructure: Install NPM Dependencies'
+        run: npm install --prefix infrastructure
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
+
+      - name: CDK bootstrap
+        run: npm run bootstrap --prefix infrastructure
+
+      - name: CDK deploy
+        run: npm run deploy --prefix infrastructure

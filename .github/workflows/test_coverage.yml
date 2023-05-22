@@ -1,0 +1,46 @@
+name: Test Coverage
+
+on:
+  workflow_call:
+    secrets:
+      NPM_READ_TOKEN:
+        required: true
+      GITHUB_TOKEN_VALUE:
+        required: true
+      SONAR_TOKEN:
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  sonarcloud:
+    name: Run Sonarcloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: 'Backend: Read .nvmrc'
+        run: echo NODE_VERSION_BACKEND=`cat backend/.nvmrc` >> $GITHUB_ENV
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION_BACKEND }}
+          registry-url: 'https://npm.pkg.github.com'
+
+      - name: Install Dependencies
+        run: npm install --prefix backend
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
+
+      - name: Scan Test Coverage
+        run: npm run test-coverage --no-warnings --prefix backend
+
+      - name: SonarCloud Scan
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN_VALUE }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
