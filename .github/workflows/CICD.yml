@@ -272,3 +272,4 @@ jobs:
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
         run: STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
+        
