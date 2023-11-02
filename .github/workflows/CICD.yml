@@ -32,9 +32,7 @@ on:
         required: false
         default: './'
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
+      AWS_OIDC_ROLE_ARN:
         required: true
       AWS_ACCOUNT_ID:
         required: true
@@ -44,6 +42,10 @@ on:
         required: false
       NPM_AUTH_TOKEN:
         required: false
+permissions:
+  id-token: write
+  contents: read
+
 
 jobs:
   Build:
@@ -125,23 +127,21 @@ jobs:
     environment:
       name: Development
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
       - name: checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
@@ -174,26 +174,23 @@ jobs:
     environment:
       name: Stage
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
       - name: checkout
         if: ${{ !inputs.DISABLE_STAGE }}
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        if: ${{ !inputs.DISABLE_STAGE }}
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
@@ -232,23 +229,21 @@ jobs:
     environment:
       name: Production
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}
+          role-session-name: githuboidc
+          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: aws-ssm-to-env
         uses: bomb-on/aws-ssm-to-env@master
         env:
           AWS_REGION: ${{ inputs.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           ssm_parameter_list: 'infrastructure_environment'
           simple_json: true
       - name: checkout
         uses: actions/checkout@v2
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.AWS_DEFAULT_REGION }}
       - name: Switch Folder if required
         if: inputs.SLS_SUBFOLDER != './'
         run: cd ${{ inputs.SLS_SUBFOLDER }}
@@ -272,4 +267,3 @@ jobs:
       - name: Deploy Serverless stack
         if: inputs.DEFAULT_FRAMEWORK == 'serverless'
         run: STAGE=prod npx serverless deploy --region=${{ inputs.AWS_DEFAULT_REGION }}
-        
