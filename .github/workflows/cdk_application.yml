@@ -55,7 +55,7 @@ jobs:
       EXPORO_AUTH_SERVICE_USERNAME: ${{ inputs.EXPORO_AUTH_SERVICE_USERNAME }}
       EXPORO_AUTH_SERVICE_PASSWORD: ${{ secrets.EXPORO_AUTH_SERVICE_PASSWORD }}
       MAIL_SERVICE_USER: ${{ inputs.MAIL_SERVICE_USER }}
-      MAIL_SERVICE_PASSWORD: ${{ secrets.MAIL_SERVICE_PASSWORD }}
+      MAIL_SERVICE_PASSWORD: ${{ secrets.SVC_GLOBAL_PWD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
