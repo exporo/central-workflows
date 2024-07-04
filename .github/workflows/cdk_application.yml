@@ -22,7 +22,7 @@ on:
       MAIL_SERVICE_USER:
         type: string
         required: false
-        default: 'svc_pat'
+        default: ${{ secrets.SVC_GLOBAL_USERNAME }}
       EXPORO_AUTH_SERVICE_USERNAME:
         type: string
         required: false
